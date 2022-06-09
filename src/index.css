@@ -24,12 +24,3 @@ ul {
   margin-bottom: 0;
   list-style: none;
 }
-
-.voteButton:not(:last-child) {
-  margin-right: 4px;
-  text-transform: capitalize;
-}
-
-.statisticsField {
-  text-transform: capitalize;
-}

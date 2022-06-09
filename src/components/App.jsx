@@ -1,19 +1,18 @@
 import React from "react";
+import FeedbackOptions from "./FeedbackOptions";
 import Statistics from "./Statistics";
+import Section from "./Section";
 
 export class App extends React.Component {
   state = { good: 0, neutral: 0, bad: 0 }
-  keys = Object.keys(this.state);
+  options = Object.keys(this.state);
 
-  buildButton = (option) => <button className="voteButton" key={option} name={option} onClick={this.OnButtonClick}>{option}</button>;
-
-  OnButtonClick = e => {
-    const option = e.target.name;
+  onLeaveFeedback = option => {
     this.setState(oldState => ({ [option]: oldState[option] + 1 }));
   }
 
-  countTotalFeedback = (list = App.options) => {
-    return this.keys.reduce((acc, option) => (acc + this.state[option]), 0);
+  countTotalFeedback = (list = this.constructor.options) => {
+    return this.options.reduce((acc, option) => (acc + this.state[option]), 0);
   }
 
   countPositivePercentage() {
@@ -25,11 +24,14 @@ export class App extends React.Component {
     const total = this.countTotalFeedback();
     const positivePercentage = this.countPositivePercentage()
     return (
-      <div>
-        <h2>Please leave feedback</h2>
-        {this.keys.map(key => this.buildButton(key))}
-        <Statistics good={good} neutral={neutral} bad={bad} total={total} positivePercentage={positivePercentage}/>
-      </div>
+      <>
+        <Section title="Please leave feedback">
+          <FeedbackOptions options={this.options} onLeaveFeedback={e => this.onLeaveFeedback(e.target.name)} />
+        </Section>
+        <Section title="Statistics">
+          <Statistics good={good} neutral={neutral} bad={bad} total={total} positivePercentage={positivePercentage}/>
+        </Section>
+      </>
     )
   };
 }

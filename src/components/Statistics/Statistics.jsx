@@ -1,10 +1,10 @@
 import PropTypes from "prop-types";
 import Notification from "components/Notification";
+import s from "./Statistics.module.css";
 
 export default function Statistics({ good, neutral, bad, total, positivePercentage }) {
   return (
     <>
-      <h2>Statistics</h2>
       { good + neutral + bad === 0
         ? <Notification message="There is no feedback"/>
         : <ul> {[
@@ -28,6 +28,6 @@ Statistics.propTypes = {
 }
 
 function buildOption(option, value, caption = option) {
-  return <li className="statisticsField" key={option} >{caption}: {value}</li>;
+  return <li className={s.field} key={option} >{caption}: {value}</li>;
 }
 
