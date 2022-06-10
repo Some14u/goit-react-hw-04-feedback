@@ -12,7 +12,9 @@ export class App extends React.Component {
   }
 
   countTotalFeedback = (list = this.constructor.options) => {
-    return this.options.reduce((acc, option) => (acc + this.state[option]), 0);
+    var sum = 0;
+    this.options.forEach(key => sum += this.state[key]);
+    return sum;
   }
 
   countPositivePercentage() {
