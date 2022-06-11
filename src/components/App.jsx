@@ -1,39 +1,39 @@
-import React from "react";
+import { useState, useMemo } from "react";
 import FeedbackOptions from "./FeedbackOptions";
 import Statistics from "./Statistics";
 import Section from "./Section";
 
-export class App extends React.Component {
-  state = { good: 0, neutral: 0, bad: 0 }
-  options = Object.keys(this.state);
+export function App() {
+  const options = ["good", "neutral", "bad"];
 
-  onLeaveFeedback = option => {
-    this.setState(oldState => ({ [option]: oldState[option] + 1 }));
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  function onLeaveFeedback(option) {
+    switch (option) {
+      case "good": setGood(oldValue => oldValue + 1); break;
+      case "neutral": setNeutral(oldValue => oldValue + 1); break;
+      case "bad": setBad(oldValue => oldValue + 1); break;
+      default: console.error(`No such option: ${option}`);
+    }
   }
 
-  countTotalFeedback = (list = this.constructor.options) => {
-    const {good, neutral, bad} = this.state
-    return good + neutral + bad;
-  }
+  const [total, positivePercentage] = useMemo(() => {
+    const total = good + neutral + bad;
+    const positivePercentage = Math.round(good / total * 100);
+    return [total, positivePercentage];
+  }, [good, neutral, bad]);
 
-  countPositivePercentage() {
-    return Math.round(this.state.good / this.countTotalFeedback() * 100);
-  }
-
-  render() {
-    const { good, neutral, bad } = this.state;
-    const total = this.countTotalFeedback();
-    const positivePercentage = this.countPositivePercentage()
-    return (
-      <>
-        <Section title="Please leave feedback">
-          <FeedbackOptions options={this.options} onLeaveFeedback={e => this.onLeaveFeedback(e.target.name)} />
-        </Section>
-        <Section title="Statistics">
-          <Statistics good={good} neutral={neutral} bad={bad} total={total} positivePercentage={positivePercentage}/>
-        </Section>
-      </>
-    )
-  };
+  return (
+    <>
+      <Section title="Please leave feedback">
+        <FeedbackOptions options={options} onLeaveFeedback={e => onLeaveFeedback(e.target.name)} />
+      </Section>
+      <Section title="Statistics">
+        <Statistics good={good} neutral={neutral} bad={bad} total={total} positivePercentage={positivePercentage}/>
+      </Section>
+    </>
+  );
 }
 
